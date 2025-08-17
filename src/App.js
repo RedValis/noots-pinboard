@@ -5,7 +5,16 @@ function uuid() {
   return Math.random().toString(36).slice(2) + Date.now();
 }
 
-const COLORS = ["#FFFAA0", "#BCF4DE", "#C5C3FF", "#FFD7D6", "#FFE9E8", "#DEEBFF"];
+const COLORS = [
+  "#FFE5E5", // Soft pink
+  "#E5F3FF", // Baby blue
+  "#F0E5FF", // Lavender
+  "#E5FFE5", // Mint green
+  "#FFF5E5", // Peach
+  "#FFE5F5", // Rose
+  "#E5FFFF", // Cyan
+  "#FFFAE5"  // Cream
+];
 
 export default function App() {
   const [notes, setNotes] = useState([]);
@@ -247,8 +256,8 @@ export default function App() {
             y1={startY}
             x2={endX}
             y2={endY}
-            stroke={isHovered ? "#ff6b35" : "#888"}
-            strokeWidth={isHovered ? 3 : 2}
+            stroke={isHovered ? "#FF69B4" : "#FFB6C1"}
+            strokeWidth={isHovered ? 4 : 3}
             markerEnd="url(#arrowhead)"
             style={{ pointerEvents: "none" }}
           />
@@ -270,7 +279,7 @@ export default function App() {
     
     const link = document.createElement('a');
     link.href = URL.createObjectURL(dataBlob);
-    link.download = `sticky-notes-board-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `cute-notes-board-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -316,20 +325,88 @@ export default function App() {
   };
 
   return (
-    <div>
+    <div style={{
+      minHeight: "100vh",
+      background: "linear-gradient(135deg, #FFE5F1 0%, #E5F3FF 25%, #F0E5FF 50%, #E5FFE5 75%, #FFF5E5 100%)",
+      backgroundSize: "400% 400%",
+      animation: "gradientShift 20s ease infinite",
+      fontFamily: "'Comic Sans MS', cursive, sans-serif"
+    }}>
+      <style>{`
+        @keyframes gradientShift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes sparkle {
+          0%, 100% { opacity: 0; transform: scale(0.5); }
+          50% { opacity: 1; transform: scale(1); }
+        }
+        
+        .floating-hearts::before {
+          content: '💕';
+          position: absolute;
+          top: -20px;
+          left: 50%;
+          transform: translateX(-50%);
+          animation: float 3s ease-in-out infinite;
+          pointer-events: none;
+          z-index: 1000;
+        }
+        
+        .sparkles::after {
+          content: '✨';
+          position: absolute;
+          top: -15px;
+          right: -15px;
+          animation: sparkle 2s ease-in-out infinite;
+          pointer-events: none;
+        }
+      `}</style>
+
       <div style={{ 
         display: "flex", 
         justifyContent: "space-between", 
         alignItems: "center", 
-        margin: "10px 20px" 
+        padding: "20px 30px",
+        background: "rgba(255, 255, 255, 0.9)",
+        backdropFilter: "blur(10px)",
+        borderBottom: "3px solid #FFB6C1",
+        boxShadow: "0 4px 20px rgba(255, 182, 193, 0.3)"
       }}>
-        <div style={{ flex: 1 }} />
-        <h2 style={{ margin: 0, textAlign: "center" }}>Sticky Notes Board 📝</h2>
         <div style={{ 
-          flex: 1, 
+          display: "flex", 
+          alignItems: "center", 
+          gap: "10px"
+        }}>
+          <span style={{ fontSize: "20px" }}>✨</span>
+        </div>
+        
+        <h2 style={{ 
+          margin: 0, 
+          textAlign: "center",
+          color: "#FF69B4",
+          fontSize: "28px",
+          textShadow: "2px 2px 4px rgba(255, 182, 193, 0.5)",
+          background: "linear-gradient(45deg, #FF69B4, #DDA0DD, #FFB6C1)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text"
+        }}>
+          Log your train of thought
+        </h2>
+        
+        <div style={{ 
           display: "flex", 
           justifyContent: "flex-end", 
-          gap: "10px" 
+          gap: "15px",
+          alignItems: "center"
         }}>
           <input
             type="file"
@@ -340,55 +417,97 @@ export default function App() {
           />
           <button
             onClick={() => document.getElementById('import-file-input').click()}
+            className="floating-hearts"
             style={{
-              padding: "8px 16px",
-              background: "#007bff",
+              padding: "12px 20px",
+              background: "linear-gradient(45deg, #FFB6C1, #DDA0DD)",
               color: "white",
               border: "none",
-              borderRadius: "4px",
+              borderRadius: "25px",
               cursor: "pointer",
-              fontSize: "14px",
+              fontSize: "16px",
+              fontWeight: "bold",
               display: "flex",
               alignItems: "center",
-              gap: "6px"
+              gap: "8px",
+              boxShadow: "0 6px 20px rgba(255, 182, 193, 0.4)",
+              transition: "all 0.3s ease",
+              position: "relative"
             }}
-            title="Import board from file"
+            title="Import your notes"
+            onMouseEnter={(e) => {
+              e.target.style.transform = "scale(1.05)";
+              e.target.style.boxShadow = "0 8px 25px rgba(255, 182, 193, 0.6)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = "scale(1)";
+              e.target.style.boxShadow = "0 6px 20px rgba(255, 182, 193, 0.4)";
+            }}
           >
             📁 Import
           </button>
           <button
             onClick={handleExport}
+            className="sparkles"
             style={{
-              padding: "8px 16px",
-              background: "#28a745",
+              padding: "12px 20px",
+              background: "linear-gradient(45deg, #98FB98, #87CEEB)",
               color: "white",
               border: "none",
-              borderRadius: "4px",
+              borderRadius: "25px",
               cursor: "pointer",
-              fontSize: "14px",
+              fontSize: "16px",
+              fontWeight: "bold",
               display: "flex",
               alignItems: "center",
-              gap: "6px"
+              gap: "8px",
+              boxShadow: "0 6px 20px rgba(152, 251, 152, 0.4)",
+              transition: "all 0.3s ease",
+              position: "relative"
             }}
-            title="Export board to file"
+            title="Save your masterpiece!"
+            onMouseEnter={(e) => {
+              e.target.style.transform = "scale(1.05)";
+              e.target.style.boxShadow = "0 8px 25px rgba(152, 251, 152, 0.6)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = "scale(1)";
+              e.target.style.boxShadow = "0 6px 20px rgba(152, 251, 152, 0.4)";
+            }}
           >
             💾 Export
           </button>
+          
+          <div style={{ 
+            display: "flex", 
+            alignItems: "center", 
+            gap: "8px"
+          }}>
+            <span style={{ fontSize: "20px" }}>💖</span>
+          </div>
         </div>
       </div>
+      
       <div
         ref={boardRef}
         onClick={handleAddNote}
         style={{
           position: "relative",
           width: "100vw",
-          height: "90vh",
-          background: "#f7f7f7",
+          height: "calc(100vh - 100px)",
+          background: "transparent",
           overflow: "hidden",
-          border: "2px dashed #e2e2e2",
           userSelect: connecting ? "none" : "auto",
+          backgroundImage: `
+            radial-gradient(circle at 20% 30%, rgba(255, 182, 193, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(221, 160, 221, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 40% 80%, rgba(152, 251, 152, 0.3) 0%, transparent 50%)
+          `,
+          backgroundSize: "100% 100%"
         }}
       >
+
+
         <svg
           style={{
             position: "absolute",
@@ -403,13 +522,13 @@ export default function App() {
           <defs>
             <marker
               id="arrowhead"
-              markerWidth="8"
-              markerHeight="8"
-              refX="4"
-              refY="4"
+              markerWidth="10"
+              markerHeight="10"
+              refX="5"
+              refY="5"
               orient="auto"
             >
-              <path d="M0,0 L8,4 L0,8" fill={hoveredConnection ? "#ff6b35" : "#888"} />
+              <path d="M0,0 L10,5 L0,10 Z" fill={hoveredConnection ? "#FF69B4" : "#FFB6C1"} />
             </marker>
           </defs>
           {renderConnections()}
@@ -431,9 +550,12 @@ export default function App() {
               y1={connectLine.fromPin.y}
               x2={connectLine.to.x}
               y2={connectLine.to.y}
-              stroke="orange"
-              strokeWidth={2}
-              strokeDasharray="5,2"
+              stroke="#FF69B4"
+              strokeWidth={3}
+              strokeDasharray="8,4"
+              style={{
+                filter: "drop-shadow(0 2px 4px rgba(255, 105, 180, 0.3))"
+              }}
             />
           </svg>
         )}
@@ -473,8 +595,19 @@ export default function App() {
           />
         ))}
       </div>
-      <div style={{ textAlign: "center", marginTop: 15, color: "#888" }}>
-        Click anywhere to add a note; drag by the top bar, connect notes by dragging from the circle and getting close to another note's circle. Hover over connection lines to highlight them, click to delete. Drag the bottom-right corner to resize notes. Click 🟰 to attach images or paste images directly into the text area.
+      <div style={{ 
+        textAlign: "center", 
+        padding: "20px",
+        background: "rgba(255, 255, 255, 0.8)",
+        color: "#8B4B8B",
+        fontSize: "16px",
+        fontWeight: "500",
+        borderTop: "2px solid #FFB6C1",
+        backdropFilter: "blur(10px)"
+      }}>
+         Click anywhere to create a note! Drag notes around, connect them with the little circles, and make your ideas beautiful! 
+        <br />
+         Drag corners to resize, click 🟰 to add pictures, or paste images directly! Click connections to remove them 💕
       </div>
     </div>
   );
@@ -622,7 +755,6 @@ function StickyNote({
 
   // Resize handlers
   const handleResizeStart = (e) => {
-    console.log('Starting resize for note:', id);
     setResizing(true);
     e.stopPropagation();
     e.preventDefault();
@@ -633,16 +765,15 @@ function StickyNote({
     const startHeight = height;
 
     const handleResizeMove = (moveEvent) => {
+      moveEvent.preventDefault();
       const newWidth = Math.max(100, startWidth + (moveEvent.clientX - startX));
       const newHeight = Math.max(60, startHeight + (moveEvent.clientY - startY));
-      console.log('Resizing to:', newWidth, newHeight);
       onResize(id, newWidth, newHeight);
     };
 
     const handleResizeEnd = (endEvent) => {
-      console.log('Ending resize');
       setResizing(false);
-      endEvent.stopPropagation(); // Prevent any propagation on mouseup
+      endEvent.stopPropagation();
       endEvent.preventDefault();
       window.removeEventListener("mousemove", handleResizeMove);
       window.removeEventListener("mouseup", handleResizeEnd);
@@ -674,45 +805,69 @@ function StickyNote({
         top: y,
         left: x,
         width: width,
-        minHeight: height,
-        boxShadow: "2px 2px 8px #ccc",
-        borderRadius: 6,
-        background: color,
+        height: height,
+        boxShadow: resizing ? "0 4px 15px rgba(255, 182, 193, 0.2)" : "0 8px 25px rgba(255, 182, 193, 0.4)",
+        borderRadius: 20,
+        background: resizing ? color : `linear-gradient(135deg, ${color}, ${color}dd)`,
         padding: 0,
-        zIndex: dragging || resizing ? 5 : 1,
+        zIndex: dragging || resizing ? 10 : 1,
         userSelect: "none",
-        border: isNearby ? "2px solid #ff6b35" : "none",
+        border: isNearby ? "3px solid #FF69B4" : "2px solid rgba(255, 255, 255, 0.6)",
+        transform: dragging ? "rotate(2deg) scale(1.02)" : "rotate(0deg) scale(1)",
+        transition: (dragging || resizing) ? "none" : "all 0.3s ease",
+        backdropFilter: resizing ? "none" : "blur(5px)",
+        fontFamily: "'Comic Sans MS', cursive, sans-serif",
+        display: "flex",
+        flexDirection: "column"
       }}
       data-noteid={id}
     >
       <div
         style={{
-          background: "rgba(0,0,0,0.05)",
+          background: resizing ? "rgba(255,255,255,0.2)" : "linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1))",
           cursor: "grab",
-          padding: 5,
-          borderTopLeftRadius: 6,
-          borderTopRightRadius: 6,
+          padding: 8,
+          borderTopLeftRadius: 18,
+          borderTopRightRadius: 18,
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           position: "relative",
+          backdropFilter: resizing ? "none" : "blur(10px)",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.3)"
         }}
         onMouseDown={onMouseDown}
       >
         <button
           onClick={handleMenuClick}
           style={{
-            background: "none",
+            background: "linear-gradient(45deg, #FFB6C1, #DDA0DD)",
             border: "none",
+            borderRadius: "50%",
+            width: "28px",
+            height: "28px",
             cursor: "pointer",
             userSelect: "none",
-            fontSize: "16px",
-            padding: "0 2px",
+            fontSize: "14px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "white",
+            boxShadow: "0 3px 10px rgba(255, 182, 193, 0.4)",
+            transition: "all 0.2s ease"
           }}
           aria-label="Menu"
-          title="Attach image"
+          title="Add images! 💕"
+          onMouseEnter={(e) => {
+            e.target.style.transform = "scale(1.1)";
+            e.target.style.boxShadow = "0 4px 15px rgba(255, 182, 193, 0.6)";
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = "scale(1)";
+            e.target.style.boxShadow = "0 3px 10px rgba(255, 182, 193, 0.4)";
+          }}
         >
-          🟰
+          📷
         </button>
         
         {/* Dropdown Menu */}
@@ -722,31 +877,44 @@ function StickyNote({
               position: "absolute",
               top: "100%",
               left: 0,
-              background: "white",
-              border: "1px solid #ccc",
-              borderRadius: 4,
-              boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-              zIndex: 1000,
-              minWidth: 120,
-              padding: 4,
+              background: "linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,245,245,0.95))",
+              border: "2px solid #FFB6C1",
+              borderRadius: 15,
+              boxShadow: "0 8px 25px rgba(255, 182, 193, 0.3)",
+              zIndex: 2000,
+              minWidth: 140,
+              padding: 8,
+              backdropFilter: "blur(10px)"
             }}
           >
             <button
               onClick={() => fileInputRef.current?.click()}
               style={{
                 width: "100%",
-                padding: "6px 10px",
+                padding: "10px 15px",
                 border: "none",
-                background: "none",
+                background: "linear-gradient(45deg, #FFE5F1, #F0E5FF)",
                 textAlign: "left",
                 cursor: "pointer",
-                borderRadius: 2,
+                borderRadius: 10,
                 fontSize: 14,
+                fontWeight: "bold",
+                color: "#8B4B8B",
+                marginBottom: 4,
+                transition: "all 0.2s ease"
               }}
-              onMouseEnter={(e) => e.target.style.background = "#f0f0f0"}
-              onMouseLeave={(e) => e.target.style.background = "none"}
+              onMouseEnter={(e) => {
+                e.target.style.background = "linear-gradient(45deg, #FFB6C1, #DDA0DD)";
+                e.target.style.color = "white";
+                e.target.style.transform = "scale(1.02)";
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = "linear-gradient(45deg, #FFE5F1, #F0E5FF)";
+                e.target.style.color = "#8B4B8B";
+                e.target.style.transform = "scale(1)";
+              }}
             >
-              📎 Attach Image
+              📎 Add Image
             </button>
             {images && images.length > 0 && (
               <button
@@ -759,78 +927,118 @@ function StickyNote({
                 }}
                 style={{
                   width: "100%",
-                  padding: "6px 10px",
+                  padding: "10px 15px",
                   border: "none",
-                  background: "none",
+                  background: "linear-gradient(45deg, #FFE5E5, #FFF0F0)",
                   textAlign: "left",
                   cursor: "pointer",
-                  borderRadius: 2,
+                  borderRadius: 10,
                   fontSize: 14,
-                  color: "#d63384",
+                  fontWeight: "bold",
+                  color: "#D8527A",
+                  transition: "all 0.2s ease"
                 }}
-                onMouseEnter={(e) => e.target.style.background = "#f0f0f0"}
-                onMouseLeave={(e) => e.target.style.background = "none"}
+                onMouseEnter={(e) => {
+                  e.target.style.background = "linear-gradient(45deg, #FF69B4, #FFB6C1)";
+                  e.target.style.color = "white";
+                  e.target.style.transform = "scale(1.02)";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = "linear-gradient(45deg, #FFE5E5, #FFF0F0)";
+                  e.target.style.color = "#D8527A";
+                  e.target.style.transform = "scale(1)";
+                }}
               >
-                🗑️ Remove All Images
+                🗑️ Clear Images
               </button>
             )}
           </div>
         )}
         
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           {/* Connection Circle */}
           <div
             onMouseDown={handleCircleDrag}
             data-noteid={id}
-            title="Connect to another note"
+            title="Connect to another note! 💕"
             style={{
-              width: 12,
-              height: 12,
+              width: 16,
+              height: 16,
               borderRadius: "50%",
-              backgroundColor: isNearby ? "#ff6b35" : "#666",
+              background: isNearby 
+                ? "linear-gradient(45deg, #FF69B4, #FFB6C1)" 
+                : "linear-gradient(45deg, #DDA0DD, #FFB6C1)",
               cursor: "pointer",
               userSelect: "none",
-              transition: "all 0.2s ease",
+              transition: "all 0.3s ease",
               border: "2px solid white",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
+              boxShadow: isNearby 
+                ? "0 0 15px #FF69B4, 0 3px 10px rgba(255, 105, 180, 0.4)" 
+                : "0 3px 10px rgba(221, 160, 221, 0.4)",
+              transform: isNearby ? "scale(1.3)" : "scale(1)"
             }}
           />
           
           <button
             onClick={() => onDelete(id)}
             style={{
-              background: "none",
+              background: "linear-gradient(45deg, #FFB6C1, #FF69B4)",
               border: "none",
+              borderRadius: "50%",
+              width: "24px",
+              height: "24px",
               fontSize: 16,
-              color: "#b28",
+              color: "white",
               cursor: "pointer",
               userSelect: "none",
-              padding: "0 2px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 3px 10px rgba(255, 105, 180, 0.4)",
+              transition: "all 0.2s ease"
             }}
             aria-label="Delete note"
+            title="Remove this note 💔"
+            onMouseEnter={(e) => {
+              e.target.style.transform = "scale(1.1)";
+              e.target.style.boxShadow = "0 4px 15px rgba(255, 105, 180, 0.6)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = "scale(1)";
+              e.target.style.boxShadow = "0 3px 10px rgba(255, 105, 180, 0.4)";
+            }}
           >
             ×
           </button>
         </div>
       </div>
+      
       {/* Content Area */}
-      <div style={{ padding: "6px 10px", display: "flex", flexDirection: "column", gap: "6px" }}>
+      <div style={{ 
+        padding: "12px 15px", 
+        display: "flex", 
+        flexDirection: "column", 
+        gap: "8px",
+        flex: 1,
+        overflow: "hidden"
+      }}>
         {/* Images Display */}
         {images && images.length > 0 && (
-          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
             {images.map((imageData, index) => (
               <div key={index} style={{ position: "relative", textAlign: "center", overflow: "hidden" }}>
                 <img
                   src={imageData}
-                  alt={`Attached ${index + 1}`}
+                  alt={`image ${index + 1}`}
                   style={{
                     width: "100%",
                     height: "auto",
-                    borderRadius: 4,
+                    borderRadius: 12,
                     objectFit: "contain",
-                    border: "1px solid rgba(0,0,0,0.1)",
-                    maxWidth: width - 20, // Account for padding
+                    border: "2px solid rgba(255, 255, 255, 0.6)",
+                    maxWidth: width - 30, // Account for padding
                     display: "block",
+                    boxShadow: "0 4px 15px rgba(255, 182, 193, 0.3)"
                   }}
                 />
                 {/* Individual image delete button */}
@@ -838,22 +1046,29 @@ function StickyNote({
                   onClick={() => onImageRemove(index)}
                   style={{
                     position: "absolute",
-                    top: 2,
-                    right: 2,
-                    background: "rgba(255,255,255,0.9)",
+                    top: 6,
+                    right: 6,
+                    background: "linear-gradient(45deg, #FFB6C1, #FF69B4)",
                     border: "none",
                     borderRadius: "50%",
-                    width: 20,
-                    height: 20,
-                    fontSize: 12,
+                    width: 24,
+                    height: 24,
+                    fontSize: 14,
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: "#d63384",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
+                    color: "white",
+                    boxShadow: "0 3px 10px rgba(255, 105, 180, 0.5)",
+                    transition: "all 0.2s ease"
                   }}
-                  title="Remove this image"
+                  title="Remove this image 💔"
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = "scale(1.1)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = "scale(1)";
+                  }}
                 >
                   ×
                 </button>
@@ -866,19 +1081,33 @@ function StickyNote({
         <textarea
           ref={textareaRef}
           style={{
-            background: "transparent",
-            border: "none",
+            background: "rgba(255, 255, 255, 0.3)",
+            border: "2px solid rgba(255, 255, 255, 0.4)",
+            borderRadius: 12,
             resize: "none",
             width: "100%",
-            minHeight: images && images.length > 0 ? 40 : Math.max(40, height - 50), // Smaller text area when images present
-            fontSize: 15,
+            height: images && images.length > 0 ? 50 : Math.max(50, height - 70),
+            fontSize: 16,
             outline: "none",
-            fontFamily: "inherit",
-            flex: images && images.length > 0 ? "0 0 auto" : "1",
+            fontFamily: "'Comic Sans MS', cursive, sans-serif",
+            padding: "10px",
+            color: "#8B4B8B",
+            fontWeight: "500",
+            backdropFilter: "blur(5px)",
+            transition: resizing ? "none" : "all 0.2s ease",
+            boxSizing: "border-box"
           }}
           value={text}
           onChange={(e) => onTextChange(e.target.value)}
-          placeholder={images && images.length > 0 ? "Add a caption..." : "Type note or paste image..."}
+          placeholder={images && images.length > 0 ? "Add a caption... " : "Your thoughts here... "}
+          onFocus={(e) => {
+            e.target.style.borderColor = "#FF69B4";
+            e.target.style.boxShadow = "0 0 10px rgba(255, 105, 180, 0.3)";
+          }}
+          onBlur={(e) => {
+            e.target.style.borderColor = "rgba(255, 255, 255, 0.4)";
+            e.target.style.boxShadow = "none";
+          }}
         />
       </div>
       
@@ -903,26 +1132,34 @@ function StickyNote({
           position: "absolute",
           bottom: 0,
           right: 0,
-          width: 16,
-          height: 16,
+          width: 20,
+          height: 20,
           cursor: "nw-resize",
-          background: "rgba(0,0,0,0.2)",
-          borderTopLeftRadius: 6,
-          borderBottomRightRadius: 6,
+          background: "linear-gradient(135deg, #FFB6C1, #FF69B4)",
+          borderTopLeftRadius: 12,
+          borderBottomRightRadius: 18,
           userSelect: "none",
           zIndex: 10,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          boxShadow: "0 3px 10px rgba(255, 105, 180, 0.4)",
+          transition: "all 0.2s ease"
         }}
-        title="Drag to resize"
+        title="Resize the note! 📏"
+        onMouseEnter={(e) => {
+          e.target.style.transform = "scale(1.1)";
+          e.target.style.boxShadow = "0 4px 15px rgba(255, 105, 180, 0.6)";
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.transform = "scale(1)";
+          e.target.style.boxShadow = "0 3px 10px rgba(255, 105, 180, 0.4)";
+        }}
       >
         <div style={{
-          position: "absolute",
-          bottom: 2,
-          right: 2,
-          width: 0,
-          height: 0,
-          borderLeft: "6px solid transparent",
-          borderBottom: "6px solid rgba(0,0,0,0.4)",
-        }} />
+          fontSize: "10px",
+          color: "white"
+        }}>⟲</div>
       </div>
     </div>
   );
