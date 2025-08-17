@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/noots-pinboard/static/css/main.e6c13ad2.css",
-    "main.js": "/noots-pinboard/static/js/main.c452ee89.js",
+    "main.js": "/noots-pinboard/static/js/main.bdd9555c.js",
     "static/js/453.c506fe65.chunk.js": "/noots-pinboard/static/js/453.c506fe65.chunk.js",
     "index.html": "/noots-pinboard/index.html",
     "main.e6c13ad2.css.map": "/noots-pinboard/static/css/main.e6c13ad2.css.map",
-    "main.c452ee89.js.map": "/noots-pinboard/static/js/main.c452ee89.js.map",
+    "main.bdd9555c.js.map": "/noots-pinboard/static/js/main.bdd9555c.js.map",
     "453.c506fe65.chunk.js.map": "/noots-pinboard/static/js/453.c506fe65.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.c452ee89.js"
+    "static/js/main.bdd9555c.js"
   ]
 }
