@@ -875,16 +875,17 @@ function StickyNote({
           <div
             style={{
               position: "absolute",
-              top: "100%",
+              top: "-10px",
               left: 0,
               background: "linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,245,245,0.95))",
               border: "2px solid #FFB6C1",
               borderRadius: 15,
               boxShadow: "0 8px 25px rgba(255, 182, 193, 0.3)",
-              zIndex: 2000,
+              zIndex: 3000,
               minWidth: 140,
               padding: 8,
-              backdropFilter: "blur(10px)"
+              backdropFilter: "blur(10px)",
+              transform: "translateY(-100%)"
             }}
           >
             <button
