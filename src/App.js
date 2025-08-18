@@ -65,8 +65,8 @@ export default function App() {
         x: x - 75,
         y: y - 30,
         text: "",
-        width: 150,
-        height: 80,
+        width: 210,
+        height: 170,
         images: [], // Changed to array for multiple images
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
       },
