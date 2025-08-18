@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 
-// Helper to generate unique IDs for notes and links
+// ID generator
 function uuid() {
   return Math.random().toString(36).slice(2) + Date.now();
 }
@@ -23,8 +23,8 @@ export default function App() {
   const connectingRef = useRef(null); // Ref to keep real-time connecting note ID
   const [connectLine, setConnectLine] = useState(null); // {fromPin:{x,y}, to:{x,y}}
   const [connectionJustFinished, setConnectionJustFinished] = useState(false);
-  const [nearbyNote, setNearbyNote] = useState(null); // For highlighting nearby connection target
-  const [hoveredConnection, setHoveredConnection] = useState(null); // For highlighting hovered connections
+  const [nearbyNote, setNearbyNote] = useState(null); // connection highlight (I hate this)
+  const [hoveredConnection, setHoveredConnection] = useState(null); // highlights again
   const boardRef = useRef();
 
   // Ref to keep bounding rects for all notes
