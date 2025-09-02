@@ -17,8 +17,27 @@ const COLORS = [
 ];
 
 export default function App() {
-  const [notes, setNotes] = useState([]);
-  const [connections, setConnections] = useState([]); // {from, to}
+  // Initialize state from localStorage or empty arrays
+  const [notes, setNotes] = useState(() => {
+    try {
+      const saved = localStorage.getItem('cute-notes-board-notes');
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      console.error('Error loading notes from localStorage:', error);
+      return [];
+    }
+  });
+  
+  const [connections, setConnections] = useState(() => {
+    try {
+      const saved = localStorage.getItem('cute-notes-board-connections');
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      console.error('Error loading connections from localStorage:', error);
+      return [];
+    }
+  }); // {from, to}
+  
   const [connecting, setConnecting] = useState(null);
   const connectingRef = useRef(null); // Ref to keep real-time connecting note ID
   const [connectLine, setConnectLine] = useState(null); // {fromPin:{x,y}, to:{x,y}}
@@ -29,6 +48,23 @@ export default function App() {
 
   // Ref to keep bounding rects for all notes
   const noteBoundsRef = useRef({});
+
+  // Save to localStorage whenever notes or connections change
+  useEffect(() => {
+    try {
+      localStorage.setItem('cute-notes-board-notes', JSON.stringify(notes));
+    } catch (error) {
+      console.error('Error saving notes to localStorage:', error);
+    }
+  }, [notes]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('cute-notes-board-connections', JSON.stringify(connections));
+    } catch (error) {
+      console.error('Error saving connections to localStorage:', error);
+    }
+  }, [connections]);
 
   // Callback to set bounding rect for a note
   const handleNoteRef = (id, el) => {
@@ -286,6 +322,36 @@ export default function App() {
     URL.revokeObjectURL(link.href);
   };
 
+  // Clear all notes and connections with confirmation
+  const handleClear = () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to clear your pinboard? 🥺\n\nThis will remove all notes and connections permanently!\n\n💡 Tip: You might want to export your board first as a backup!"
+    );
+    
+    if (confirmed) {
+      setNotes([]);
+      setConnections([]);
+      
+      // Clear any ongoing operations
+      setConnecting(null);
+      setConnectLine(null);
+      setNearbyNote(null);
+      setHoveredConnection(null);
+      connectingRef.current = null;
+      setConnectionJustFinished(false);
+      
+      // Clear localStorage
+      try {
+        localStorage.removeItem('cute-notes-board-notes');
+        localStorage.removeItem('cute-notes-board-connections');
+      } catch (error) {
+        console.error('Error clearing localStorage:', error);
+      }
+      
+      console.log('Board cleared successfully! ✨');
+    }
+  };
+
   // Import board state from JSON file
   const handleImport = (event) => {
     const file = event.target.files[0];
@@ -476,6 +542,36 @@ export default function App() {
             }}
           >
             💾 Export
+          </button>
+          <button
+            onClick={handleClear}
+            style={{
+              padding: "12px 20px",
+              background: "linear-gradient(45deg, #FFB6C1, #FF69B4)",
+              color: "white",
+              border: "none",
+              borderRadius: "25px",
+              cursor: "pointer",
+              fontSize: "16px",
+              fontWeight: "bold",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              boxShadow: "0 6px 20px rgba(255, 105, 180, 0.4)",
+              transition: "all 0.3s ease",
+              position: "relative"
+            }}
+            title="Clear everything and start fresh!"
+            onMouseEnter={(e) => {
+              e.target.style.transform = "scale(1.05)";
+              e.target.style.boxShadow = "0 8px 25px rgba(255, 105, 180, 0.6)";
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = "scale(1)";
+              e.target.style.boxShadow = "0 6px 20px rgba(255, 105, 180, 0.4)";
+            }}
+          >
+            🗑️ Clear
           </button>
           
           <div style={{ 
